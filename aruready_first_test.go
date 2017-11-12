@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
-
+	. "github.com/karmoid/aruready/karmostate"
 	. "github.com/pranavraja/zen"
+	"testing"
 )
 
 func TestZen(t *testing.T) {
@@ -53,5 +53,26 @@ func TestZen2(t *testing.T) {
 		it("should execute before and after functions", setup(func(expect Expect) {
 			expect(count).ToEqual(1)
 		}))
+	})
+}
+
+func TestCli(t *testing.T) {
+	Desc(t, "CLI", func(it It) {
+		submitData := "anything #tag1 #tag2 #tag3"
+		unknownTag := "tag4"
+		knownTag := "tag3"
+		analyzedData, _ := CliAnalyze(submitData)
+		it("should return 3 tags when submit 3 #", func(expect Expect) {
+			expect(len(analyzedData.Tag())).ToEqual(3)
+		})
+		it("should not return unknown tag when don't exist", func(expect Expect) {
+			expect(analyzedData.FindTag(unknownTag)).ToNotExist()
+		})
+		it("should return tag exists when exist", func(expect Expect) {
+			expect(analyzedData.FindTag(knownTag)).ToExist()
+		})
+		// it("should return known tag when exist", func(expect Expect) {
+		// 	expect(analyzedData.FindTag(knownTag)).ToEqual(knownTag)
+		// })
 	})
 }
